@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\VisitanteRequest;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Validation\ValidationException;
 
 class VisitanteController extends Controller
 {
@@ -37,10 +38,17 @@ class VisitanteController extends Controller
      */
     public function store(VisitanteRequest $request): RedirectResponse
     {
+        // Verificar si ya existe un visitante con el mismo numero_identificacion
+        $exists = Visitante::where('numero_identificacion', $request->input('numero_identificacion'))->first();
+
+        if ($exists) {
+            throw ValidationException::withMessages(['numero_identificacion' => 'Ya existe un visitante con este número de identificación.']);
+        }
+
         Visitante::create($request->validated());
 
         return Redirect::route('visitantes.index')
-            ->with('success', 'Visitante created successfully.');
+            ->with('success', 'Visitante creado exitosamente.');
     }
 
     /**
@@ -71,14 +79,17 @@ class VisitanteController extends Controller
         $visitante->update($request->validated());
 
         return Redirect::route('visitantes.index')
-            ->with('success', 'Visitante updated successfully');
+            ->with('success', 'Visitante actualizado exitosamente');
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy($id): RedirectResponse
     {
         Visitante::find($id)->delete();
 
         return Redirect::route('visitantes.index')
-            ->with('success', 'Visitante deleted successfully');
+            ->with('success', 'Visitante eliminado exitosamente');
     }
 }

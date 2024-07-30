@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\GuardiaRequest;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Validation\ValidationException;
 
 class GuardiaController extends Controller
 {
@@ -37,10 +38,17 @@ class GuardiaController extends Controller
      */
     public function store(GuardiaRequest $request): RedirectResponse
     {
+        // Verificar si ya existe un guardia con el mismo numero_identificacion
+        $exists = Guardia::where('numero_identificacion', $request->input('numero_identificacion'))->first();
+
+        if ($exists) {
+            throw ValidationException::withMessages(['numero_identificacion' => 'Ya existe un guardia con este número de identificación.']);
+        }
+
         Guardia::create($request->validated());
 
         return Redirect::route('guardias.index')
-            ->with('success', 'Guardia created successfully.');
+            ->with('success', 'Guardia creado exitosamente.');
     }
 
     /**
@@ -71,14 +79,17 @@ class GuardiaController extends Controller
         $guardia->update($request->validated());
 
         return Redirect::route('guardias.index')
-            ->with('success', 'Guardia updated successfully');
+            ->with('success', 'Guardia actualizado exitosamente');
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy($id): RedirectResponse
     {
         Guardia::find($id)->delete();
 
         return Redirect::route('guardias.index')
-            ->with('success', 'Guardia deleted successfully');
+            ->with('success', 'Guardia eliminado exitosamente');
     }
 }
