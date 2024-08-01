@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property $id
  * @property $nombre_completo
  * @property $numero_identificacion
+ * @property $estado
  * @property $created_at
  * @property $updated_at
  *
@@ -27,7 +28,7 @@ class Guardia extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['nombre_completo', 'numero_identificacion'];
+    protected $fillable = ['nombre_completo', 'numero_identificacion', 'estado'];
 
 
     /**

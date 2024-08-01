@@ -28,6 +28,10 @@
                                     <strong>Numero Identificacion:</strong>
                                     {{ $guardia->numero_identificacion }}
                                 </div>
+                                <div class="form-group mb-2 mb20">
+                                    <strong>Estado:</strong>
+                                    {{ $guardia->estado }}
+                                </div>
 
                     </div>
                 </div>

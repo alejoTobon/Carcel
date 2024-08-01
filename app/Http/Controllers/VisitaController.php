@@ -49,7 +49,7 @@ class VisitaController extends Controller
         }
 
         // Verificar si la visita es el domingo y está entre las 14:00 y 17:00
-        if ($fecha_hora_inicio->dayOfWeek !== Carbon::SUNDAY) {
+        if ($fecha_hora_inicio->dayOfWeek !== Carbon::THURSDAY) {
             throw ValidationException::withMessages(['fecha_hora_inicio' => 'Las visitas solo pueden ser registradas los domingos.']);
         }
 

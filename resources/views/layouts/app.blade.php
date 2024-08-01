@@ -55,7 +55,16 @@
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
+            
+            @if(Auth::check() && Auth::user()->rol === 'administrador')
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="{{ route('guardias.index') }}" >
+            <i class="fas fa-fw fa-wrench"></i>
+            <span>Guardias</span>
+        </a>
+    </li>
+    @else
+    <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ route('prisioneros.index') }}">
                     <i class="fas fa-fw fa-cog"></i>
                     <span>Prisioneros</span>
@@ -78,21 +87,15 @@
                 </a>
                
             </li>
-            @if(Auth::check() && Auth::user()->rol === 'administrador')
     <li class="nav-item">
-        <a class="nav-link collapsed" href="{{ route('guardias.index') }}" >
-            <i class="fas fa-fw fa-wrench"></i>
-            <span>Guardias</span>
-        </a>
-    </li>
-@endif
-            <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ route('visitas.index') }}" >
                     <i class="fas fa-fw fa-wrench"></i>
                     <span>Visita</span>
                 </a>
                
             </li>
+@endif
+          
 
             <!-- Divider -->
             <hr class="sidebar-divider">

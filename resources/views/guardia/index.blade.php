@@ -38,7 +38,7 @@
                                         
 									<th >Nombre Completo</th>
 									<th >Numero Identificacion</th>
-
+                                    <th >Estado</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -49,14 +49,16 @@
                                             
 										<td >{{ $guardia->nombre_completo }}</td>
 										<td >{{ $guardia->numero_identificacion }}</td>
-
+                                        <td >{{ $guardia->estado }}</td>
                                             <td>
-                                                <form action="{{ route('guardias.destroy', $guardia->id) }}" method="POST">
+                                                <form action="{{ route('guardias.toggleStatus', $guardia->id) }}" method="POST">
                                                     <a class="btn btn-sm btn-primary " href="{{ route('guardias.show', $guardia->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
                                                     <a class="btn btn-sm btn-success" href="{{ route('guardias.edit', $guardia->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
                                                     @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="event.preventDefault(); confirm('Are you sure to delete?') ? this.closest('form').submit() : false;"><i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
+                                                    @method('PATCH')
+                                                    <button type="submit" class="btn {{ $guardia->estado === 'Activo' ? 'btn-danger' : 'btn-warning' }}" onclick="return confirm('¿Estás seguro de que deseas cambiar el estado?');">
+        {{ $guardia->estado === 'Activo' ? 'Desactivar' : 'Activar' }}
+    </button>
                                                 </form>
                                             </td>
                                         </tr>

@@ -81,4 +81,12 @@ class PrisioneroController extends Controller
         return Redirect::route('prisioneros.index')
             ->with('success', 'Prisionero deleted successfully');
     }
+
+    public function historial($id)
+{
+    
+    $prisionero = Prisionero::with('visitas.visitante')->findOrFail($id);
+    return view('prisioneros.historial', compact('prisionero'));
+}
+
 }
