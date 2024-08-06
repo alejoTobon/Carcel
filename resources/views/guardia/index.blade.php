@@ -1,3 +1,6 @@
+<!-- Incluye SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @extends('layouts.app')
 
 @section('template_title')
@@ -16,11 +19,11 @@
                                 {{ __('Guardias') }}
                             </span>
 
-                             <div class="float-right">
+                            <div class="float-right">
                                 <a href="{{ route('guardias.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
-                                  {{ __('Create New') }}
+                                  {{ __('Crear nuevo guardia') }}
                                 </a>
-                              </div>
+                            </div>
                         </div>
                     </div>
                     @if ($message = Session::get('success'))
@@ -35,10 +38,9 @@
                                 <thead class="thead">
                                     <tr>
                                         <th>No</th>
-                                        
-									<th >Nombre Completo</th>
-									<th >Numero Identificacion</th>
-                                    <th >Estado</th>
+                                        <th>Nombre Completo</th>
+                                        <th>Numero Identificacion</th>
+                                        <th>Estado</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -46,17 +48,16 @@
                                     @foreach ($guardias as $guardia)
                                         <tr>
                                             <td>{{ ++$i }}</td>
-                                            
-										<td >{{ $guardia->nombre_completo }}</td>
-										<td >{{ $guardia->numero_identificacion }}</td>
-                                        <td >{{ $guardia->estado }}</td>
+                                            <td>{{ $guardia->nombre_completo }}</td>
+                                            <td>{{ $guardia->numero_identificacion }}</td>
+                                            <td>{{ $guardia->estado }}</td>
                                             <td>
-                                                <form action="{{ route('guardias.toggleStatus', $guardia->id) }}" method="POST">
-                                                    <a class="btn btn-sm btn-primary " href="{{ route('guardias.show', $guardia->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
-                                                    <a class="btn btn-sm btn-success" href="{{ route('guardias.edit', $guardia->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
+                                                <form action="{{ route('guardias.toggleStatus', $guardia->id) }}" method="POST" class="toggle-status-form">
+                                                    <a class="btn btn-sm btn-primary" href="{{ route('guardias.show', $guardia->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Mostrar') }}</a>
+                                                    <a class="btn btn-sm btn-success" href="{{ route('guardias.edit', $guardia->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Editar') }}</a>
                                                     @csrf
                                                     @method('PATCH')
-                                                    <button type="submit" class="btn {{ $guardia->estado === 'Activo' ? 'btn-danger' : 'btn-warning' }}" onclick="return confirm('¿Estás seguro de que deseas cambiar el estado?');">
+                                                    <button type="button" class="btn  {{ $guardia->estado === 'Activo' ? 'btn-danger' : 'btn-warning' }} btn-sm toggle-status-btn">
         {{ $guardia->estado === 'Activo' ? 'Desactivar' : 'Activar' }}
     </button>
                                                 </form>
@@ -72,4 +73,35 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Añadir evento de SweetAlert al botón de cambio de estado
+        const toggleButtons = document.querySelectorAll('.toggle-status-btn');
+
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                const form = this.closest('form');
+                const actionText = this.textContent.trim();
+
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: `¿Deseas ${actionText.toLowerCase()} este guardia?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, confirmar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    });
+</script>
 @endsection

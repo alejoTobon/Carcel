@@ -5,10 +5,10 @@ namespace App\Exports;
 use App\Models\Prisionero;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use Illuminate\Support\Facades\Storage;
 
 class PrisioneroVisitanteExport
 {
@@ -70,9 +70,10 @@ class PrisioneroVisitanteExport
         $writer = new Xlsx($spreadsheet);
         $filename = 'reporte_prisioneros.xlsx';
 
-        // Save the file to the specified path
-        $writer->save($filename);
+        // Save the file to a temporary path
+        $tempFilePath = Storage::disk('local')->path($filename);
+        $writer->save($tempFilePath);
 
-        return $filename;
+        return $tempFilePath;
     }
 }

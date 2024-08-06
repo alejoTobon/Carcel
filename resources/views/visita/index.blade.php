@@ -17,8 +17,8 @@
                             </span>
 
                              <div class="float-right">
-                                <a href="{{ route('visitas.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
-                                  {{ __('Create New') }}
+                                <a href="{{ route('visitas.create') }}" class="btn btn-primary btn-sm float-right" data-placement="left">
+                                  {{ __('Crear Nuevo') }}
                                 </a>
                               </div>
                         </div>
@@ -36,11 +36,11 @@
                                     <tr>
                                         <th>No</th>
                                         
-									<th >Prisionero Id</th>
-									<th >Visitante Id</th>
-									<th >Guardia Id</th>
-									<th >Fecha Hora Inicio</th>
-									<th >Fecha Hora Fin</th>
+										<th>Id Prisionero</th>
+										<th>Id Visitante</th>
+										<th>Id Guardia</th>
+										<th>Fecha Hora Inicio</th>
+										<th>Fecha Hora Fin</th>
 
                                         <th></th>
                                     </tr>
@@ -50,19 +50,19 @@
                                         <tr>
                                             <td>{{ ++$i }}</td>
                                             
-										<td >{{ $visita->prisionero_id }}</td>
-										<td >{{ $visita->visitante_id }}</td>
-										<td >{{ $visita->guardia_id }}</td>
-										<td >{{ $visita->fecha_hora_inicio }}</td>
-										<td >{{ $visita->fecha_hora_fin }}</td>
+											<td>{{ $visita->prisionero_id }}</td>
+											<td>{{ $visita->visitante_id }}</td>
+											<td>{{ $visita->guardia_id }}</td>
+											<td>{{ $visita->fecha_hora_inicio }}</td>
+											<td>{{ $visita->fecha_hora_fin }}</td>
 
                                             <td>
                                                 <form action="{{ route('visitas.destroy', $visita->id) }}" method="POST">
-                                                    <a class="btn btn-sm btn-primary " href="{{ route('visitas.show', $visita->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
-                                                    <a class="btn btn-sm btn-success" href="{{ route('visitas.edit', $visita->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
+                                                    <a class="btn btn-sm btn-primary" href="{{ route('visitas.show', $visita->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Mostrar') }}</a>
+                                                    <a class="btn btn-sm btn-success" href="{{ route('visitas.edit', $visita->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Editar') }}</a>
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="event.preventDefault(); confirm('Are you sure to delete?') ? this.closest('form').submit() : false;"><i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
+                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="event.preventDefault(); confirm('¿Estás seguro de que deseas eliminar?') ? this.closest('form').submit() : false;"><i class="fa fa-fw fa-trash"></i> {{ __('Eliminar') }}</button>
                                                 </form>
                                             </td>
                                         </tr>

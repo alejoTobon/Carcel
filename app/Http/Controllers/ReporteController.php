@@ -1,51 +1,42 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Models\Prisionero;
+use App\Models\Visita;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Validator;
-use PDF;
-use App\Exports\PrisioneroExport;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\PrisioneroVisitanteExport;
 
 class ReporteController extends Controller
 {
+    // Método para generar PDF
     public function generarPDF(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-        ]);
-
-        if ($validator->fails()) {
-            return Redirect::back()->withErrors($validator)->withInput();
-        }
-
-        $startDate = $request->input('start_date');
+    
+        
+     $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
+        $prisioneros = Prisionero::with(['visitas.visitante'])
+            ->whereHas('visitas', function($query) use ($startDate, $endDate) {
+                $query->whereBetween('fecha_hora_inicio', [$startDate, $endDate]);
+            })->get();
 
-        // Aquí iría el código para generar el PDF
-        $pdf = PDF::loadView('reportes.prisionero', compact('startDate', 'endDate'));
+        $pdf = Pdf::loadView('reportes.prisionero_pdf', compact('prisioneros', 'startDate', 'endDate'));
 
-        return $pdf->download('reporte_prisionero.pdf');
+        return $pdf->download('reporte_prisioneros.pdf');
     }
 
+    // Método para generar Excel
     public function generarExcel(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-        ]);
-
-        if ($validator->fails()) {
-            return Redirect::back()->withErrors($validator)->withInput();
-        }
-
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
-        // Aquí iría el código para generar el archivo Excel
-        return Excel::download(new PrisioneroExport($startDate, $endDate), 'reporte_prisionero.xlsx');
+        $exporter = new PrisioneroVisitanteExport($startDate, $endDate);
+        $filePath = $exporter->export();
+
+        // Descarga el archivo generado
+        return response()->download($filePath)->deleteFileAfterSend(true);
     }
 }
